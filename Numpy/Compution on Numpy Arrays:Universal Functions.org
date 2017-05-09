@@ -1,0 +1,80 @@
+#+TITLE:Computation on Numpy Arrays:Universal Functions
+
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  np.random.seed(0)
+
+  def compute_reciprocals(values):
+      output = np.empty(len(values))
+      for i in range(len(values)):
+          output[i] = 1.0 / values[i]
+      return output
+
+  values = np.random.randint(1, 10, size=5)
+  compute_reciprocals(values)
+#+END_SRC
+
+#+RESULTS:
+: array([ 0.16666667,  1.        ,  0.25      ,  0.25      ,  0.125     ])
+
+#+BEGIN_SRC ipython :session :exports both  
+  big_array = np.random.randint(1, 100, size=1000000)
+  %timeit compute_reciprocals(big_array)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = np.array([3 -4j, 4 - 4j, 2 + 0j, 0 + 1j])
+  np.abs(x)
+#+END_SRC
+
+#+RESULTS:
+: array([ 5.        ,  5.65685425,  2.        ,  1.        ])
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = [-1, 0, 1]
+  np.arcsin(x)
+#+END_SRC
+
+#+RESULTS:
+: array([-1.57079633,  0.        ,  1.57079633])
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  np.log2(x)
+#+END_SRC
+
+#+RESULTS:
+: array([ nan, -inf,   0.])
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  x = np.arange(5)
+  y = np.empty(5)
+  np.multiply(x, 10, out=y)
+  print(y)
+#+END_SRC
+
+#+RESULTS:
+: [  0.  10.  20.  30.  40.]
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = np.arange(1, 101)
+  np.add.reduce(x)
+#+END_SRC
+
+#+RESULTS:
+: 5050
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = np.arange(1, 6)
+  np.multiply.outer(x, 4)
+#+END_SRC
+
+#+RESULTS:
+: array([ 4,  8, 12, 16, 20])

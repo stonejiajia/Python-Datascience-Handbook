@@ -1,0 +1,259 @@
+
+#+TITLE:Fancy Indexing
+
+* Exploring Fancy Indexing
+
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  rand = np.random.RandomState(42)
+
+  x =  rand.randint(100, size=10)
+  x
+#+END_SRC
+
+#+RESULTS:
+: array([51, 92, 14, 71, 60, 20, 82, 86, 74, 74])
+
+#+BEGIN_SRC ipython :session :exports both  
+[x[3], x[7], x[2]]
+#+END_SRC
+
+#+RESULTS:
+| 71 | 86 | 14 |
+
+#+BEGIN_SRC ipython :session :exports both  
+  ind = np.array([[3, 7],
+                  [4, 5]])
+  x[ind]
+#+END_SRC
+
+#+RESULTS:
+: array([[71, 86],
+:        [60, 20]])
+
+#+BEGIN_SRC ipython :session :exports both  
+  X = np.arange(12).reshape((3, 4))
+  X
+#+END_SRC
+
+#+RESULTS:
+: array([[ 0,  1,  2,  3],
+:        [ 4,  5,  6,  7],
+:        [ 8,  9, 10, 11]])
+
+#+BEGIN_SRC ipython :session :exports both  
+  row = np.array([0, 1, 2])
+  col = np.array([2, 1, 3])
+  X[row, col]
+#+END_SRC
+
+#+RESULTS:
+: array([ 2,  5, 11])
+
+#+BEGIN_SRC ipython :session :exports both  
+  X[row[:, np.newaxis], col]
+#+END_SRC
+
+#+RESULTS:
+: array([[ 2,  1,  3],
+:        [ 6,  5,  7],
+:        [10,  9, 11]])
+
+#+BEGIN_SRC ipython :session :exports both  
+  row, col
+#+END_SRC
+
+#+RESULTS:
+| array | ((0 1 2)) | array | ((2 1 3)) |
+
+#+BEGIN_SRC ipython :session :exports both  
+  row[:, np.newaxis]
+#+END_SRC
+
+#+RESULTS:
+: array([[0],
+:        [1],
+:        [2]])
+
+* Combined Indexing
+
+#+BEGIN_SRC ipython :session :exports both  
+X
+#+END_SRC
+
+#+RESULTS:
+: array([[ 0,  1,  2,  3],
+:        [ 4,  5,  6,  7],
+:        [ 8,  9, 10, 11]])
+
+#+BEGIN_SRC ipython :session :exports both  
+X[2, [2, 0, 1]]
+#+END_SRC
+
+#+RESULTS:
+: array([10,  8,  9])
+
+#+BEGIN_SRC ipython :session :exports both  
+mask = np.array([1, 0, 1, 0], dtype=bool)
+X[row[:, np.newaxis], mask]
+#+END_SRC
+
+#+RESULTS:
+: array([[ 0,  2],
+:        [ 4,  6],
+:        [ 8, 10]])
+
+
+* Example: Selecting Random Points
+#+BEGIN_SRC ipython :session :exports both  
+  mean = [0,0]
+  cov = [[1, 2],
+         [2, 5]]
+
+  X = rand.multivariate_normal(mean, cov, 100)
+  X.shape
+#+END_SRC
+
+#+RESULTS:
+| 100 | 2 |
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_x.png
+plt.scatter(X[:, 0], X[:, 1])
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_x.png]]
+
+
+#+BEGIN_SRC ipython :session :exports both  
+indices = np.random.choice(X.shape[0], 20, replace=False)
+indices
+#+END_SRC
+
+#+RESULTS:
+: array([ 2, 83, 24, 86, 37, 35, 79, 44, 48, 72, 62, 50, 71, 85, 68, 75, 88,
+:        27, 82, 38])
+
+
+#+BEGIN_SRC ipython :session :exports both  
+selection = X[indices]
+selection.shape
+#+END_SRC
+
+#+RESULTS:
+| 20 | 2 |
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_ds.png
+  plt.scatter(X[:, 0], X[:, 1], alpha=0.3)
+  plt.scatter(selection[:, 0], selection[:, 1],
+              facecolor='none', s = 200)
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_ds.png]]
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_ui.png
+ plt.scatter(X[:, 0], X[:, 1], alpha=0.3)
+ plt.scatter(selection[:, 0], selection[:, 1],
+              facecolor='none', s = 200)
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_ui.png]]
+
+* Modifying Values with Fancy Indexing
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = np.arange(10)
+  i = np.array([2, 1, 8, 4])
+  x[i] = 99
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+print(x)
+#+END_SRC
+
+#+RESULTS:
+: [ 0 99 99  3 99  5  6  7 99  9]
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+x[i] -= 10
+print(x)
+#+END_SRC
+
+#+RESULTS:
+: [ 0 89 89  3 89  5  6  7 89  9]
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+x = np.zeros(10)
+x[[0,0]] = [4, 6]
+print(x)
+#+END_SRC
+
+#+RESULTS:
+: [ 6.  0.  0.  0.  0.  0.  0.  0.  0.  0.]
+
+#+BEGIN_SRC ipython :session :exports both  
+i = [2, 3, 3, 4, 4, 4]
+x[i] += 1
+x
+#+END_SRC
+
+#+RESULTS:
+: array([ 6.,  0.,  1.,  1.,  1.,  0.,  0.,  0.,  0.,  0.])
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  x = np.zeros(10)
+  np.add.at(x, i, 1)
+  print(x)
+#+END_SRC
+
+#+RESULTS:
+: [ 0.  0.  1.  2.  3.  0.  0.  0.  0.  0.]
+
+
+* Example: Binning Data
+#+BEGIN_SRC ipython :session :exports both  
+  np.random.seed(42)
+  x = np.random.randn(100)
+
+  # compute a histogram by hand
+  bins = np.linspace(-5, 5, 20)
+  counts = np.zeros_like(bins)
+
+  #find the appropriate bin for each x
+  i = np.searchsorted(bins, x)
+
+  # add  1 to each of these bins
+  np.add.at(counts, i, 1)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_dd.png
+plt.plot(bins, counts, linestyle='steps')
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_dd.png]]
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_as.png
+plt.hist(x, bins, histtype='step')
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_as.png]]
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_df.png
+%timeit counts, edges = np.histogram(x, bins)
+#+END_SRC
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_1.png
+%timeit np.add.at(counts, np.searchsorted(bins, x), 1)
+#+END_SRC
+

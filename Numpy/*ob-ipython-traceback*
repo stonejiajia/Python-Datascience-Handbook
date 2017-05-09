@@ -1,0 +1,22 @@
+
+TypeErrorTraceback (most recent call last)
+<ipython-input-1448-e13554db25da> in <module>()
+      1 ser1 = pd.Series(['A', 'B', 'c'], index=[1, 2, 3])
+      2 ser2 = pd.Series(['D', 'E', 'F'], index=[4, 5, 6])
+----> 3 pd.concat(ser1, ser2)
+
+/Users/stone20091652/.pyenv/versions/anaconda3-4.2.0/lib/python3.5/site-packages/pandas/tools/merge.py in concat(objs, axis, join, join_axes, ignore_index, keys, levels, names, verify_integrity, copy)
+    843                        keys=keys, levels=levels, names=names,
+    844                        verify_integrity=verify_integrity,
+--> 845                        copy=copy)
+    846     return op.get_result()
+    847 
+
+/Users/stone20091652/.pyenv/versions/anaconda3-4.2.0/lib/python3.5/site-packages/pandas/tools/merge.py in __init__(self, objs, axis, join, join_axes, keys, levels, names, ignore_index, verify_integrity, copy)
+    858             raise TypeError('first argument must be an iterable of pandas '
+    859                             'objects, you passed an object of type '
+--> 860                             '"{0}"'.format(type(objs).__name__))
+    861 
+    862         if join == 'outer':
+
+TypeError: first argument must be an iterable of pandas objects, you passed an object of type "Series"

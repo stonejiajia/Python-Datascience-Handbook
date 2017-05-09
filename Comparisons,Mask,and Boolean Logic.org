@@ -1,0 +1,164 @@
+
+#+TITLE:Comparison, Mask, and Boolean Logic
+
+#+BEGIN_SRC ipython :session :exports both  
+
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  data = pd.read_csv('data/Seattle2014.csv')
+  rainfall = pd.read_csv('data/Seattle2014.csv')['PRCP'].values
+  inches = rainfall / 254
+  inches.shape
+#+END_SRC 
+
+#+RESULTS:
+| 365 |
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_d.png
+plt.hist(inches, 40)
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_d.png]]
+#+BEGIN_SRC ipython :session :exports both  
+x = np.array([1, 2, 3, 4, 5])
+x < 3
+#+END_SRC
+
+#+RESULTS:
+: array([ True,  True, False, False, False], dtype=bool)
+
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  rng = np.random.RandomState(0)
+  x = rng.randint(10, size=(3, 4))
+  x
+#+END_SRC
+
+#+RESULTS:
+: array([[5, 0, 3, 3],
+:        [7, 9, 3, 5],
+:        [2, 4, 7, 6]])
+
+#+BEGIN_SRC ipython :session :exports both  
+x < 5
+#+END_SRC
+
+#+RESULTS:
+: array([[False,  True,  True,  True],
+:        [False, False,  True, False],
+:        [ True,  True, False, False]], dtype=bool)
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  np.count_nonzero(x<6)
+
+#+END_SRC
+
+#+RESULTS:
+: 8
+
+#+BEGIN_SRC ipython :session :exports both  
+np.sum(x < 6, axis=1)
+#+END_SRC
+
+#+RESULTS:
+: array([4, 2, 2])
+
+#+BEGIN_SRC ipython :session :exports both  
+np.any(x > 8)
+#+END_SRC
+
+#+RESULTS:
+: True
+
+#+BEGIN_SRC ipython :session :exports both  
+np.all(x < 8, axis=0)
+#+END_SRC
+
+#+RESULTS:
+: array([ True, False,  True,  True], dtype=bool)
+
+* Boolean Operators
+#+BEGIN_SRC ipython :session :exports both  
+  np.sum((inches > 0.5) & (inches < 1))
+#+END_SRC
+
+#+RESULTS:
+: 29
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  print("Number days without rain:      ", np.sum(inches == 0))
+  print("Number days with rain          ", np.sum(inches != 0))
+  print("Days with more than 0.5 inches:", np.sum(inches > 0.5))
+  print("Rainy days with < 0.2 inches:  ", np.sum((inches > 0) & (inches < 0.2)))
+#+END_SRC
+
+#+RESULTS:
+: Number days without rain:       215
+: Number days with rain           150
+: Days with more than 0.5 inches: 37
+: Rainy days with < 0.2 inches:   75
+
+* Boolean Arrays as Masks
+#+BEGIN_SRC ipython :session :exports both  
+x[x < 5]
+#+END_SRC
+
+#+RESULTS:
+: array([0, 3, 3, 3, 2, 4])
+
+#+BEGIN_SRC ipython :session :exports both  
+rainy = (inches > 0)
+days = np.arange(365)
+summer = (days > 172) & (days < 262)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :exports both  
+np.median(inches[rainy & ~summer])
+#+END_SRC
+
+#+RESULTS:
+: 0.20078740157480315
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  print("Median precip on rainy days in 2014:   ",
+        np.median(inches[rainy]))
+  print("Median precip on summer days in 2014:  ",
+        np.median(inches[summer]))
+  print("Maximum precip on summer days in 2014: ",
+        np.max(inches[summer]))
+  print("Median precip on non-summer rainy days:",
+        np.median(inches[rainy & ~summer]))
+#+END_SRC
+
+#+RESULTS:
+: Median precip on rainy days in 2014:    0.194881889764
+: Median precip on summer days in 2014:   0.0
+: Maximum precip on summer days in 2014:  0.850393700787
+: Median precip on non-summer rainy days: 0.200787401575
+
+#+BEGIN_SRC ipython :session :exports both  
+  A = np.array([1, 0, 1, 0, 1, 0], dtype=bool)
+  B = np.array([1, 1, 1, 0, 1, 1], dtype=bool)
+  A | B
+#+END_SRC
+
+#+RESULTS:
+: array([ True,  True,  True, False,  True,  True], dtype=bool)
+
+#+BEGIN_SRC 
+A or B
+#+END_SRC
+
+在 Array 中当检验布尔值时，不能用 or，and 来代替 "|"，"&"
+
+ 
+

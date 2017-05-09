@@ -1,0 +1,123 @@
+#+TITLE:Min Max, and Everything in Between
+
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  L = np.random.random(100)
+  sum(L)
+#+END_SRC
+
+#+RESULTS:
+: 45.79630298485382
+
+#+BEGIN_SRC ipython :session :exports both  
+np.sum(L)
+#+END_SRC
+
+#+RESULTS:
+: 45.796302984853845
+
+
+#+BEGIN_SRC ipython :session :exports both  
+big_array = np.random.rand(1000000)
+%timeit sum(big_array)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :exports both  
+min(big_array)
+#+END_SRC
+
+#+RESULTS:
+: 1.8904897758353911e-07
+
+#+BEGIN_SRC ipython :session :exports both  
+data = pd.read_csv('data/president_heights.csv')
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+    order                    name  height(cm)
+0       1       George Washington         189
+1       2              John Adams         170
+2       3        Thomas Jefferson         189
+3       4           James Madison         163
+4       5            James Monroe         183
+5       6       John Quincy Adams         171
+6       7          Andrew Jackson         185
+7       8        Martin Van Buren         168
+8       9  William Henry Harrison         173
+9      10              John Tyler         183
+10     11           James K. Polk         173
+11     12          Zachary Taylor         173
+12     13        Millard Fillmore         175
+13     14         Franklin Pierce         178
+14     15          James Buchanan         183
+15     16         Abraham Lincoln         193
+16     17          Andrew Johnson         178
+17     18        Ulysses S. Grant         173
+18     19     Rutherford B. Hayes         174
+19     20       James A. Garfield         183
+20     21       Chester A. Arthur         183
+21     23       Benjamin Harrison         168
+22     25        William McKinley         170
+23     26      Theodore Roosevelt         178
+24     27     William Howard Taft         182
+25     28          Woodrow Wilson         180
+26     29       Warren G. Harding         183
+27     30         Calvin Coolidge         178
+28     31          Herbert Hoover         182
+29     32   Franklin D. Roosevelt         188
+30     33         Harry S. Truman         175
+31     34    Dwight D. Eisenhower         179
+32     35         John F. Kennedy         183
+33     36       Lyndon B. Johnson         193
+34     37           Richard Nixon         182
+35     38             Gerald Ford         183
+36     39            Jimmy Carter         177
+37     40           Ronald Reagan         185
+38     41       George H. W. Bush         188
+39     42            Bill Clinton         188
+40     43          George W. Bush         182
+41     44            Barack Obama         185
+#+end_example
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+heights = np.array(data['height(cm)'])
+print(heights)
+#+END_SRC
+
+#+RESULTS:
+: [189 170 189 163 183 171 185 168 173 183 173 173 175 178 183 193 178 173
+:  174 183 183 168 170 178 182 180 183 178 182 188 175 179 183 193 182 183
+:  177 185 188 188 182 185]
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  print("Mean height:       ", heights.mean())
+  print("Standard deviation:", heights.std())
+  print("Minimum height:    ", heights.min())
+  print("Maximum height     ", heights.max())
+#+END_SRC
+
+#+RESULTS:
+: Mean height:        179.738095238
+: Standard deviation: 6.93184344275
+: Minimum height:     163
+: Maximum height      193
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_1.png
+plt.hist(heights)
+plt.title('Height Distribution of US Presidents')
+plt.xlabel('height (cm)')
+plt.ylabel('number')
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_1.png]]
+

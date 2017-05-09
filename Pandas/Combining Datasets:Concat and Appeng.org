@@ -1,0 +1,89 @@
+#+TITLE:Combining Datasets: Concat and Append
+* Combining Datasets: Concat and Append
+
+#+BEGIN_SRC ipython :session :exports both  :results output
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+  from tabulate import tabulate
+
+  def make_df(cols, ind):
+      """Quickly make a DataFrame"""
+      data = {c: [str(c) + str(i) for i in ind]
+              for c in cols}
+      return pd.DataFrame(data, ind)
+
+  a = make_df('ABC', range(3))
+  
+  print(tabulate(a, headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+: |    | A   | B   | C   |
+: |----+-----+-----+-----|
+: |  0 | A0  | B0  | C0  |
+: |  1 | A1  | B1  | C1  |
+: |  2 | A2  | B2  | C2  |
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = [1, 2, 3]
+  y = [4, 5, 6]
+  z = [7, 8, 9]
+  np.concatenate([x, y, z])
+#+END_SRC
+
+#+RESULTS:
+: array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+#+BEGIN_SRC ipython :session :exports both  
+x = [[1, 2],
+     [3, 4]]
+np.concatenate([x, x], axis=0)
+#+END_SRC
+
+#+RESULTS:
+: array([[1, 2],
+:        [3, 4],
+:        [1, 2],
+:        [3, 4]])
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = [[1, 2],
+       [3, 4]]
+  np.concatenate([x, x], axis=1)
+#+END_SRC
+
+#+RESULTS:
+: array([[1, 2, 1, 2],
+:        [3, 4, 3, 4]])
+
+
+* Simple Concatenation with pd.concat
+
+#+BEGIN_SRC ipython :session :exports both  
+  ser1 = pd.Series(['A', 'B', 'c'], index=[1, 2, 3])
+  ser2 = pd.Series(['D', 'E', 'F'], index=[4, 5, 6])
+  pd.concat([ser1, ser2])
+#+END_SRC
+
+#+RESULTS:
+: 1    A
+: 2    B
+: 3    c
+: 4    D
+: 5    E
+: 6    F
+: dtype: object
+
+#+BEGIN_SRC ipython :session :exports both  
+df1 = make_df('AB', [1, 2])
+df2 = make_df('AB', [3, 4])
+display('df1', 'df2', 'pd.concat([df1, df2])')
+#+END_SRC
+
+#+RESULTS:
+: pd.concat([df1, df2])
+
+from IPython.display import display, HTML

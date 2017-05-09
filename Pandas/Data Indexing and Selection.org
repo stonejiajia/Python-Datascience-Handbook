@@ -1,0 +1,359 @@
+
+#+TITLE:Data Indexing and Selection
+#+AUTHOR:     stonejiajia
+#+EMAIL:      mdl AT imapmail DOT org
+#+OPTIONS:    H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:(HIDE) tags:not-in-toc
+#+STARTUP:    align fold nodlcheck hidestars oddeven lognotestate
+#+SEQ_TODO:   TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c)
+#+LANGUAGE:   en
+#+PRIORITIES: A C B
+#+CATEGORY:   worg
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
+
+
+
+* Data Selection in Series
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  data = pd.Series([0.25, 0.5, 0.75, 1.0],
+                   index=['a', 'b', 'c', 'd'])
+  data
+#+END_SRC
+
+#+RESULTS:
+: a    0.25
+: b    0.50
+: c    0.75
+: d    1.00
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+data['b']
+#+END_SRC
+
+#+RESULTS:
+: 0.5
+
+#+BEGIN_SRC ipython :session :exports both  
+'a' in data
+#+END_SRC
+
+#+RESULTS:
+: True
+
+#+BEGIN_SRC ipython :session :exports both  
+data.keys()
+#+END_SRC
+
+#+RESULTS:
+: Index(['a', 'b', 'c', 'd'], dtype='object')
+
+#+BEGIN_SRC ipython :session :exports both  
+list(data.items())
+#+END_SRC
+
+#+RESULTS:
+| a | 0.25 |
+| b |  0.5 |
+| c | 0.75 |
+| d |  1.0 |
+
+#+BEGIN_SRC ipython :session :exports both  
+  data['e'] = 1.25
+  
+  data
+#+END_SRC
+
+#+RESULTS:
+: a    0.25
+: b    0.50
+: c    0.75
+: d    1.00
+: e    1.25
+: dtype: float64
+
+* Series as one-dimensional array
+#+BEGIN_SRC ipython :session :exports both  
+data['a':'c']
+#+END_SRC
+
+#+RESULTS:
+: Empty DataFrame
+: Columns: [area, pop, density]
+: Index: []
+
+#+BEGIN_SRC ipython :session :exports both  
+data[0:2]
+#+END_SRC
+
+#+RESULTS:
+: a    0.25
+: b    0.50
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+data[(data > 0.3) & (data < 0.8)]
+#+END_SRC
+
+#+RESULTS:
+: b    0.50
+: c    0.75
+: dtype: float64
+
+* Lindexers:loc, iloc, and ix
+#+BEGIN_SRC ipython :session :exports both  
+  data = pd.Series(['a', 'b', 'c'], index=[1, 3, 5])
+  data
+#+END_SRC
+
+#+RESULTS:
+: 1    a
+: 3    b
+: 5    c
+: dtype: object
+
+
+** loc
+#+BEGIN_SRC ipython :session :exports both  
+data.loc[1:2]
+#+END_SRC
+
+#+RESULTS:
+: 1    a
+: dtype: object
+
+#+BEGIN_SRC ipython :session :exports both  
+data.loc[1]
+#+END_SRC
+
+#+RESULTS:
+: a
+** iloc
+#+BEGIN_SRC ipython :session :exports both  
+data.iloc[0]
+#+END_SRC
+
+#+RESULTS:
+: a
+
+* Data Selection in DataFrame
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  area = pd.Series({'California': 423967, 'Texas': 695662,
+                    'New York': 141297, 'Florida': 170312,
+                    'Illinois': 149995})
+  pop = pd.Series({'California': 38332521, 'Texas': 26448193,
+                   'New York': 19651127, 'Florida': 19552860,
+                   'Illinois': 12882135})
+  data = pd.DataFrame({'area':area, 'pop':pop})
+  
+  print(tabulate(data, headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+: |            |   area |         pop |
+: |------------+--------+-------------|
+: | California | 423967 | 3.83325e+07 |
+: | Florida    | 170312 | 1.95529e+07 |
+: | Illinois   | 149995 | 1.28821e+07 |
+: | New York   | 141297 | 1.96511e+07 |
+: | Texas      | 695662 | 2.64482e+07 |
+
+#+BEGIN_SRC ipython :session :exports both  
+data['area']
+#+END_SRC
+
+#+RESULTS:
+: California    423967
+: Florida       170312
+: Illinois      149995
+: New York      141297
+: Texas         695662
+: Name: area, dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+data.area
+#+END_SRC
+
+#+RESULTS:
+: California    423967
+: Florida       170312
+: Illinois      149995
+: New York      141297
+: Texas         695662
+: Name: area, dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+data.area is data['area']
+#+END_SRC
+
+#+RESULTS:
+: True
+
+#+BEGIN_SRC ipython :session :exports both  
+data.pop
+#+END_SRC
+
+#+RESULTS:
+: <bound method NDFrame.pop of               area       pop
+: California  423967  38332521
+: Florida     170312  19552860
+: Illinois    149995  12882135
+: New York    141297  19651127
+: Texas       695662  26448193>
+
+#+BEGIN_SRC ipython :session :exports both  
+data['pop']
+#+END_SRC
+
+#+RESULTS:
+: California    38332521
+: Florida       19552860
+: Illinois      12882135
+: New York      19651127
+: Texas         26448193
+: Name: pop, dtype: int64
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  data['density'] = data['pop'] / data['area']
+  
+  print(tabulate(data, headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+: |            |   area |         pop |   density |
+: |------------+--------+-------------+-----------|
+: | California | 423967 | 3.83325e+07 |   90.4139 |
+: | Florida    | 170312 | 1.95529e+07 |  114.806  |
+: | Illinois   | 149995 | 1.28821e+07 |   85.8838 |
+: | New York   | 141297 | 1.96511e+07 |  139.077  |
+: | Texas      | 695662 | 2.64482e+07 |   38.0187 |
+
+* DataFrame as two-dimensional array
+
+#+BEGIN_SRC ipython :session :exports both  
+data.values
+#+END_SRC
+
+#+RESULTS:
+: array([[  4.23967000e+05,   3.83325210e+07,   9.04139261e+01],
+:        [  1.70312000e+05,   1.95528600e+07,   1.14806121e+02],
+:        [  1.49995000e+05,   1.28821350e+07,   8.58837628e+01],
+:        [  1.41297000e+05,   1.96511270e+07,   1.39076746e+02],
+:        [  6.95662000e+05,   2.64481930e+07,   3.80187404e+01]])
+
+#+BEGIN_SRC ipython :session :exports both  
+data.T
+#+END_SRC
+
+#+RESULTS:
+:            California       Florida      Illinois      New York         Texas
+: area     4.239670e+05  1.703120e+05  1.499950e+05  1.412970e+05  6.956620e+05
+: pop      3.833252e+07  1.955286e+07  1.288214e+07  1.965113e+07  2.644819e+07
+: density  9.041393e+01  1.148061e+02  8.588376e+01  1.390767e+02  3.801874e+01
+
+#+BEGIN_SRC ipython :session :exports both  
+data.values[0]
+#+END_SRC
+
+#+RESULTS:
+: array([  4.23967000e+05,   3.83325210e+07,   9.04139261e+01])
+
+#+BEGIN_SRC ipython :session :exports both  
+data.T['California']
+#+END_SRC
+
+#+RESULTS:
+: area       4.239670e+05
+: pop        3.833252e+07
+: density    9.041393e+01
+: Name: California, dtype: float64
+
+
+#+BEGIN_SRC ipython :session :exports both  
+data.iloc[:3, :2]
+#+END_SRC
+
+#+RESULTS:
+:               area       pop
+: California  423967  38332521
+: Florida     170312  19552860
+: Illinois    149995  12882135
+
+三行两列
+
+#+BEGIN_SRC ipython :session :exports both  
+data.loc[:'Illinois', :'pop']
+#+END_SRC
+
+#+RESULTS:
+:               area       pop
+: California  423967  38332521
+: Florida     170312  19552860
+: Illinois    149995  12882135
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  data.ix[:3, :'pop']
+#+END_SRC
+
+#+RESULTS:
+:               area       pop
+: California  423967  38332521
+: Florida     170312  19552860
+: Illinois    149995  12882135
+
+#+BEGIN_SRC ipython :session :exports both  
+  data.loc[data.density > 100, ['pop', 'density']]
+#+END_SRC
+
+#+RESULTS:
+:                pop     density
+: Florida   19552860  114.806121
+: New York  19651127  139.076746
+
+#+BEGIN_SRC ipython :session :exports both  
+  data.iloc[0,2] = 90
+  data
+#+END_SRC
+
+#+RESULTS:
+:               area       pop     density
+: California  423967  38332521   90.000000
+: Florida     170312  19552860  114.806121
+: Illinois    149995  12882135   85.883763
+: New York    141297  19651127  139.076746
+: Texas       695662  26448193   38.018740
+
+#+BEGIN_SRC ipython :session :exports both  
+  data['Florida':'Illinois']
+#+END_SRC
+
+#+RESULTS:
+:             area       pop     density
+: Florida   170312  19552860  114.806121
+: Illinois  149995  12882135   85.883763
+
+#+BEGIN_SRC ipython :session :exports both  
+  data[1:3]
+#+END_SRC
+
+#+RESULTS:
+:             area       pop     density
+: Florida   170312  19552860  114.806121
+: Illinois  149995  12882135   85.883763
+
+#+BEGIN_SRC ipython :session :exports both  
+  data[data.density > 100]
+#+END_SRC
+
+#+RESULTS:
+:             area       pop     density
+: Florida   170312  19552860  114.806121
+: New York  141297  19651127  139.076746

@@ -1,0 +1,265 @@
+
+
+#+TITLE:Introduction Pandas Pbjects
+* The Pandas Series Object
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+  from tabulate import tabulate
+
+
+
+
+  data = pd.Series([0.25, 0.5, 0.75, 1.0])
+
+  data
+#+END_SRC
+
+#+RESULTS:
+: 0    0.25
+: 1    0.50
+: 2    0.75
+: 3    1.00
+: dtype: float64
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  data.values
+#+END_SRC
+
+#+RESULTS:
+: array([ 0.25,  0.5 ,  0.75,  1.  ])
+
+#+BEGIN_SRC ipython :session :exports both  
+  data = pd.Series([0.25, 0.5, 0.75, 1.0], index=['a', 'b', 'c', 'd'])
+  data
+#+END_SRC
+
+#+RESULTS:
+: a    0.25
+: b    0.50
+: c    0.75
+: d    1.00
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+  population_dict = {'California': 38332521,
+                     'Texas': 26448193,
+                     'New York': 19651127,
+                     'Florida': 19552860,
+                     'Illinois': 12882135}
+  population = pd.Series(population_dict)
+  population
+  
+  
+#+END_SRC
+
+#+RESULTS:
+: California    38332521
+: Florida       19552860
+: Illinois      12882135
+: New York      19651127
+: Texas         26448193
+: dtype: int64
+as         26448193
+: dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+population['Florida']
+#+END_SRC
+
+#+RESULTS:
+: 19552860
+
+* Constructiong Series objects
+#+BEGIN_SRC ipython :session :exports both  
+pd.Series([2, 4, 6])
+#+END_SRC
+
+#+RESULTS:
+: 0    2
+: 1    4
+: 2    6
+: dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+pd.Series(5, index=[100, 200, 300])
+#+END_SRC
+
+#+RESULTS:
+: 100    5
+: 200    5
+: 300    5
+: dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+pd.Series({2:'a', 1:'b', 3:'c'})
+#+END_SRC
+
+#+RESULTS:
+: 1    b
+: 2    a
+: 3    c
+: dtype: object
+
+#+BEGIN_SRC ipython :session :exports both  
+pd.Series({2:'a', 1:'b', 3:'c'}, index=[3, 2])
+#+END_SRC
+
+#+RESULTS:
+: 3    c
+: 2    a
+: dtype: object
+
+* The Pandas DataFrame Object
+** DataFrame as a generalized Numpy array
+#+BEGIN_SRC ipython :session :exports both  
+  area_dict ={'California': 423967, 'Texas': 695662, 'New York': 141297,
+              'Florida': 170312, 'Illinois': 149995}
+  area = pd.Series(area_dict)
+  area
+#+END_SRC
+
+#+RESULTS:
+: California    423967
+: Florida       170312
+: Illinois      149995
+: New York      141297
+: Texas         695662
+: dtype: int64
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+  states = pd.DataFrame({'population': population,
+                         'area': area, 'Test' : population})
+
+  print(tabulate(states, headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+|            |        Test |   area |  population |
+|------------+-------------+--------+-------------|
+| California | 3.83325e+07 | 423967 | 3.83325e+07 |
+| Florida    | 1.95529e+07 | 170312 | 1.95529e+07 |
+| Illinois   | 1.28821e+07 | 149995 | 1.28821e+07 |
+| New York   | 1.96511e+07 | 141297 | 1.96511e+07 |
+| Texas      | 2.64482e+07 | 695662 | 2.64482e+07 |
+
+
+#+BEGIN_SRC ipython :session :exports both  
+states.index
+#+END_SRC
+
+#+RESULTS:
+: Index(['California', 'Florida', 'Illinois', 'New York', 'Texas'], dtype='object')
+
+#+BEGIN_SRC ipython :session :exports both  
+states.columns
+#+END_SRC
+
+#+RESULTS:
+: Index(['Test', 'area', 'population'], dtype='object')
+
+#+BEGIN_SRC ipython :session :exports both  
+states.head(2)
+#+END_SRC
+
+#+RESULTS:
+:                 Test    area  population
+: California  38332521  423967    38332521
+: Florida     19552860  170312    19552860
+
+
+* DataFrame as specialized dictionary
+#+BEGIN_SRC ipython :session :exports both  
+states['area']
+#+END_SRC
+
+#+RESULTS:
+: California    423967
+: Florida       170312
+: Illinois      149995
+: New York      141297
+: Texas         695662
+: Name: area, dtype: int64
+
+* Constructing DataFrame objects
+#+BEGIN_SRC ipython :session :exports both  
+pd.DataFrame(population, columns=['population'])
+#+END_SRC
+
+#+RESULTS:
+:             population
+: California    38332521
+: Florida       19552860
+: Illinois      12882135
+: New York      19651127
+: Texas         26448193
+
+#+BEGIN_SRC ipython :session :exports both  
+  data = [{'a': i, 'b': 2 * i,}
+          for i in range(3)]
+  pd.DataFrame(data)
+#+END_SRC
+
+#+RESULTS:
+:    a  b
+: 0  0  0
+: 1  1  2
+: 2  2  4
+
+#+BEGIN_SRC ipython :session :exports both  
+  pd.DataFrame([{'a': 1, 'b': 2}, {'b': 3, 'c': 4}])
+#+END_SRC
+
+#+RESULTS:
+:      a  b    c
+: 0  1.0  2  NaN
+: 1  NaN  3  4.0
+
+#+BEGIN_SRC ipython :session :exports both  
+  pd.DataFrame({'population': population, 'area': area})
+#+END_SRC
+
+#+RESULTS:
+:               area  population
+: California  423967    38332521
+: Florida     170312    19552860
+: Illinois    149995    12882135
+: New York    141297    19651127
+: Texas       695662    26448193
+
+#+BEGIN_SRC ipython :session :results output :exports both  
+ data =  pd.DataFrame(np.random.rand(3, 2),
+               columns=['foo', 'bar'],
+               index=['a', 'b', 'c'])
+ 
+ print(tabulate(data, headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+: |    |      foo |       bar |
+: |----+----------+-----------|
+: | a  | 0.534068 | 0.0667413 |
+: | b  | 0.138835 | 0.183359  |
+: | c  | 0.850042 | 0.901696  |
+
+* The Pandas Index Object
+#+BEGIN_SRC ipython :session :exports both  
+  ind = pd.Index([2, 3, 5, 7, 11])
+  ind
+#+END_SRC
+
+#+RESULTS:
+: Int64Index([2, 3, 5, 7, 11], dtype='int64')
+
+#+BEGIN_SRC ipython :session :exports both  
+  ind[::2]
+#+END_SRC
+
+#+RESULTS:
+: Int64Index([2, 5, 11], dtype='int64')
+
+

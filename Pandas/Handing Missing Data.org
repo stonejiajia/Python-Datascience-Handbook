@@ -1,0 +1,255 @@
+#+TITLE:Handing Missing Data
+
+* None:Pythonic missing data
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  vals1 = np.array([1, None, 3, 4])
+  vals1
+#+END_SRC
+
+#+RESULTS:
+: array([1, None, 3, 4], dtype=object)
+
+#+BEGIN_SRC ipython :session :exports both  :results output
+  for dtype in ['object', 'int']:
+      print("dtype =", dtype)
+      %timeit np.arange(1E6, dtype=dtype).sum()
+      print()
+#+END_SRC
+
+#+RESULTS:
+: dtype = object
+: 10 loops, best of 3: 80.4 ms per loop
+: 
+: dtype = int
+: 100 loops, best of 3: 2.93 ms per loop
+: 
+
+* NaN: Missing numerical data
+#+BEGIN_SRC ipython :session :exports both  
+  vals2 = np.array([1, np.nan, 3, 4])
+  vals2.dtype
+#+END_SRC
+
+#+RESULTS:
+: dtype('float64')
+
+#+BEGIN_SRC ipython :session :exports both  
+  1 + np.nan
+#+END_SRC
+
+#+RESULTS:
+: nan
+
+#+BEGIN_SRC ipython :session :exports both  
+  0 * np.nan
+#+END_SRC
+
+#+RESULTS:
+: nan
+
+#+BEGIN_SRC ipython :session :exports both  
+  vals2.sum(), vals2.min(), vals2.max()
+#+END_SRC
+
+#+RESULTS:
+| nan | nan | nan |
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  np.nansum(vals2), np.nanmin(vals2), np.nanmax(vals2)
+#+END_SRC
+
+#+RESULTS:
+| 8.0 | 1.0 | 4.0 |
+
+* NaN and Nome in Pandas
+#+BEGIN_SRC ipython :session :exports both  
+  pd.Series([1, np.nan, 2, None])
+#+END_SRC
+
+#+RESULTS:
+: 0    1.0
+: 1    NaN
+: 2    2.0
+: 3    NaN
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+  x = pd.Series(range(2), dtype=int)
+  x
+#+END_SRC
+
+#+RESULTS:
+: 0    0
+: 1    1
+: dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+x[0] = None
+x
+#+END_SRC
+
+#+RESULTS:
+: 0    NaN
+: 1    1.0
+: dtype: float64
+
+** Detecting null values
+#+BEGIN_SRC ipython :session :exports both  
+  data = pd.Series([1, np.nan, 'hello', None])
+  data.isnull()
+#+END_SRC
+
+#+RESULTS:
+: 0    False
+: 1     True
+: 2    False
+: 3     True
+: dtype: bool
+
+#+BEGIN_SRC ipython :session :exports both  
+  data[data.notnull()]
+  
+#+END_SRC
+
+#+RESULTS:
+: 0        1
+: 2    hello
+: dtype: object
+
+** Dropping null values
+#+BEGIN_SRC ipython :session :exports both  
+data.dropna()
+#+END_SRC
+
+#+RESULTS:
+: 0        1
+: 2    hello
+: dtype: object
+
+#+BEGIN_SRC ipython :session :exports both  
+  df = pd.DataFrame([[1,      np.nan, 2],
+                     [2,      3,      5],
+                     [np.nan, 4,      6]]    )
+  df
+#+END_SRC
+
+#+RESULTS:
+:      0    1  2
+: 0  1.0  NaN  2
+: 1  2.0  3.0  5
+: 2  NaN  4.0  6
+
+#+BEGIN_SRC ipython :session :exports both  
+  df.dropna()
+#+END_SRC
+
+#+RESULTS:
+:      0    1  2
+: 1  2.0  3.0  5
+
+#+BEGIN_SRC ipython :session :exports both  
+  df.dropna(axis=1)
+#+END_SRC
+
+#+RESULTS:
+:    2
+: 0  2
+: 1  5
+: 2  6
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  df.dropna(axis='columns', how='all')
+#+END_SRC
+
+#+RESULTS:
+:      0    1  2
+: 0  1.0  NaN  2
+: 1  2.0  3.0  5
+: 2  NaN  4.0  6
+
+#+BEGIN_SRC ipython :session :exports both  
+  df.dropna(axis='rows', thresh=3)
+#+END_SRC
+
+#+RESULTS:
+:      0    1  2
+: 1  2.0  3.0  5
+
+** Filling null values
+#+BEGIN_SRC ipython :session :exports both  
+  data = pd.Series([1, np.nan, 2, None, 3], index=list('abcde'))
+  data
+#+END_SRC
+
+#+RESULTS:
+: a    1.0
+: b    NaN
+: c    2.0
+: d    NaN
+: e    3.0
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+  data.fillna(0)
+#+END_SRC
+
+#+RESULTS:
+: a    1.0
+: b    0.0
+: c    2.0
+: d    0.0
+: e    3.0
+: dtype: float64
+
+
+#+BEGIN_SRC ipython :session :exports both  
+   data.fillna(method='ffill')
+#+END_SRC
+
+#+RESULTS:
+: a    1.0
+: b    1.0
+: c    2.0
+: d    2.0
+: e    3.0
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+  data.fillna(method='bfill')
+#+END_SRC
+
+#+RESULTS:
+: a    1.0
+: b    2.0
+: c    2.0
+: d    3.0
+: e    3.0
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+  df
+#+END_SRC
+
+#+RESULTS:
+:      0    1  2
+: 0  1.0  NaN  2
+: 1  2.0  3.0  5
+: 2  NaN  4.0  6
+
+#+BEGIN_SRC ipython :session :exports both  
+  df.fillna(method='ffill', axis=1)
+#+END_SRC
+
+#+RESULTS:
+:      0    1    2
+: 0  1.0  1.0  2.0
+: 1  2.0  3.0  5.0
+: 2  NaN  4.0  6.0

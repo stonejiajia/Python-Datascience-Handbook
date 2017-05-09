@@ -1,0 +1,232 @@
+
+#+TITLE:Operating on Data in Pandas
+
+* Ufuncs: Index Presevation
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  rng = np.random.RandomState(42)
+  ser = pd.Series(rng.randint(0, 10, 4))
+  ser
+#+END_SRC
+
+#+RESULTS:
+: 0    6
+: 1    3
+: 2    7
+: 3    4
+: dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+  df = pd.DataFrame(rng.randint(0, 10, (3, 4)),
+                    columns=['A', 'B', 'C', 'D'])
+  df
+#+END_SRC
+
+#+RESULTS:
+:    A  B  C  D
+: 0  6  9  2  6
+: 1  7  4  3  7
+: 2  7  2  5  4
+
+#+BEGIN_SRC ipython :session :exports both  
+np.exp(df)
+#+END_SRC
+
+#+RESULTS:
+:              A            B           C            D
+: 0   403.428793  8103.083928    7.389056   403.428793
+: 1  1096.633158    54.598150   20.085537  1096.633158
+: 2  1096.633158     7.389056  148.413159    54.598150
+
+#+BEGIN_SRC ipython :session :exports both  
+np.sin(df * np.pi / 4)
+#+END_SRC
+
+#+RESULTS:
+:           A             B         C             D
+: 0 -1.000000  7.071068e-01  1.000000 -1.000000e+00
+: 1 -0.707107  1.224647e-16  0.707107 -7.071068e-01
+: 2 -0.707107  1.000000e+00 -0.707107  1.224647e-16
+
+* UFuncs: Index Alignment
+
+#+BEGIN_SRC ipython :session :exports both  
+area = pd.Series({'Alaska': 1723337, 'Texas': 695662,
+                  'California': 423967}, name='area')
+population = pd.Series({'California': 38332521, 'Texas': 26448193,
+                        'New York': 19651127}, name='population')
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :exports both  
+population / area
+
+#+END_SRC
+
+#+RESULTS:
+: Alaska              NaN
+: California    90.413926
+: New York            NaN
+: Texas         38.018740
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+area.index | population.index
+#+END_SRC
+
+#+RESULTS:
+: Index(['Alaska', 'California', 'New York', 'Texas'], dtype='object')
+
+#+BEGIN_SRC ipython :session :exports both  
+  A = pd.Series([2, 4, 6], index=[0, 1, 2])
+  B = pd.Series([1, 3, 5], index=[1, 2, 3])
+  A + B
+#+END_SRC
+
+#+RESULTS:
+: 0    NaN
+: 1    5.0
+: 2    9.0
+: 3    NaN
+: dtype: float64
+
+#+BEGIN_SRC ipython :session :exports both  
+  A.add(B, fill_value=0)
+#+END_SRC
+
+#+RESULTS:
+: 0    2.0
+: 1    5.0
+: 2    9.0
+: 3    5.0
+: dtype: float64
+
+* Index alignment in DataFrame
+#+BEGIN_SRC ipython :session :exports both  
+  A = pd.DataFrame(rng.randint(0, 20, (2, 2)),
+                   columns=list('AB'))
+  A
+#+END_SRC
+
+#+RESULTS:
+:     A   B
+: 0  19  17
+: 1  13   1
+
+#+BEGIN_SRC ipython :session :exports both  
+  B = pd.DataFrame(rng.randint(0, 10, (3, 3)),
+                   columns=list('BAC'))
+  B
+#+END_SRC
+
+#+RESULTS:
+:    B  A  C
+: 0  8  4  3
+: 1  9  0  6
+: 2  2  5  4
+
+#+BEGIN_SRC ipython :session :exports both  
+A + B
+#+END_SRC
+
+#+RESULTS:
+:       A     B   C
+: 0  23.0  25.0 NaN
+: 1  13.0  10.0 NaN
+: 2   NaN   NaN NaN
+
+#+BEGIN_SRC ipython :session :exports both  
+fill = A.stack().mean()
+A.pow(B, fill_value=fill)
+#+END_SRC
+
+#+RESULTS:
+:               A             B             C
+: 0  130321.00000  6.975757e+09  1.953125e+03
+: 1       1.00000  1.000000e+00  3.814697e+06
+: 2  305175.78125  1.562500e+02  2.441406e+04
+
+
+* Ufuncs: Operation Between DataFrame and Series
+#+BEGIN_SRC ipython :session :exports both  
+  A = rng.randint(10, size=(3, 4))
+  A
+#+END_SRC
+
+#+RESULTS:
+: array([[4, 4, 0, 0],
+:        [2, 9, 3, 4],
+:        [1, 7, 1, 8]])
+
+#+BEGIN_SRC ipython :session :exports both  
+  A - A[0]
+#+END_SRC
+
+#+RESULTS:
+: array([[ 0,  0,  0,  0],
+:        [-2,  5,  3,  4],
+:        [-3,  3,  1,  8]])
+
+#+BEGIN_SRC ipython :session :exports both  
+  df = pd.DataFrame(A, columns=list('QRST'))
+  df
+#+END_SRC
+
+#+RESULTS:
+:    Q  R  S  T
+: 0  4  4  0  0
+: 1  2  9  3  4
+: 2  1  7  1  8
+
+#+BEGIN_SRC ipython :session :exports both  
+df - df.iloc[0]
+#+END_SRC
+
+#+RESULTS:
+:    Q  R  S  T
+: 0  0  0  0  0
+: 1 -2  5  3  4
+: 2 -3  3  1  8
+
+#+BEGIN_SRC ipython :session :exports both  
+  df.subtract(df['R'], axis=0)
+#+END_SRC
+
+#+RESULTS:
+:    Q  R  S  T
+: 0  0  0 -4 -4
+: 1 -7  0 -6 -5
+: 2 -6  0 -6  1
+
+#+BEGIN_SRC ipython :session :exports both  
+  halfrow = df.iloc[0, ::2]
+  halfrow
+#+END_SRC
+
+#+RESULTS:
+: Q    4
+: S    0
+: Name: 0, dtype: int64
+
+#+BEGIN_SRC ipython :session :exports both  
+  df - halfrow
+#+END_SRC
+
+#+RESULTS:
+:      Q   R    S   T
+: 0  0.0 NaN  0.0 NaN
+: 1 -2.0 NaN  3.0 NaN
+: 2 -3.0 NaN  1.0 NaN
+
+#+BEGIN_SRC ipython :session :exports both  
+  halfrow.keys()
+#+END_SRC
+
+#+RESULTS:
+: Index(['Q', 'S'], dtype='object')

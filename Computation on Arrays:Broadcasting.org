@@ -1,0 +1,122 @@
+#+TITLE:Computation on Arrays: Broadcasting
+
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  a = np.array([0, 1, 2])
+  b = np.array([5, 5, 5])
+  a + b
+#+END_SRC
+
+#+RESULTS:
+: array([5, 6, 7])
+
+#+BEGIN_SRC ipython :session :exports both  
+a + 5
+#+END_SRC
+
+#+RESULTS:
+: array([5, 6, 7])
+
+#+BEGIN_SRC ipython :session :exports both  
+M = np.ones((3,3))
+M
+#+END_SRC
+
+#+RESULTS:
+: array([[ 1.,  1.,  1.],
+:        [ 1.,  1.,  1.],
+:        [ 1.,  1.,  1.]])
+
+#+BEGIN_SRC ipython :session :exports both  
+M + a
+#+END_SRC
+
+#+RESULTS:
+: array([[ 1.,  2.,  3.],
+:        [ 1.,  2.,  3.],
+:        [ 1.,  2.,  3.]])
+
+** Broadcasting example 1
+
+#+BEGIN_SRC ipython :session :exports both  
+M = np.ones((2, 3))
+a = np.arange(3)
+M+ a
+#+END_SRC
+
+#+RESULTS:
+: array([[ 1.,  2.,  3.],
+:        [ 1.,  2.,  3.]])
+
+** Broadcasting example 2
+#+BEGIN_SRC ipython :session :exports both  
+a = np.arange(3).reshape((3,1))
+b = np.arange(3)
+a + b
+#+END_SRC
+
+#+RESULTS:
+: array([[0, 1, 2],
+:        [1, 2, 3],
+:        [2, 3, 4]])
+
+** Broadcasting example 3
+#+BEGIN_SRC ipython :session :exports both  
+  M = np.ones((3, 2))
+  a = np.arange(3)
+
+  a[:, np.newaxis].shape
+  M + a[:, np.newaxis]
+#+END_SRC
+
+#+RESULTS:
+: array([[ 1.,  1.],
+:        [ 2.,  2.],
+:        [ 3.,  3.]])
+
+#+BEGIN_SRC ipython :session :exports both  
+X = np.random.random((10, 3))
+X
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+array([[ 0.94894057,  0.08529923,  0.37929556],
+       [ 0.08529421,  0.29370341,  0.89903408],
+       [ 0.91945283,  0.65733615,  0.8541557 ],
+       [ 0.54544045,  0.29373485,  0.70686637],
+       [ 0.06592903,  0.6930569 ,  0.13977988],
+       [ 0.26888411,  0.58289076,  0.15384663],
+       [ 0.70971768,  0.44544372,  0.12132045],
+       [ 0.33567743,  0.2563501 ,  0.59546506],
+       [ 0.00538737,  0.81700372,  0.75987528],
+       [ 0.71918607,  0.29550474,  0.99895347]])
+#+end_example
+
+#+BEGIN_SRC ipython :session :exports both  
+
+X.mean(0)
+#+END_SRC
+
+#+RESULTS:
+: array([ 0.46039097,  0.44203236,  0.56085925])
+
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_2.png
+  x = np.linspace(0, 5, 50)
+  y = np.linspace(0, 5, 50)[:, np.newaxis]
+
+  z = np.sin(x) ** 10 + np.cos(10 + y * x)
+
+  plt.imshow(z, origin='lower', extent=[0, 5, 0, 5],
+             cmap='viridis')
+  plt.colorbar()
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_2.png]]

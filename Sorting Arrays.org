@@ -1,0 +1,36 @@
+ #+TITLE:Sorting Arrays
+
+* Sorting Arrays
+
+#+BEGIN_SRC ipython :session :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+
+  def selection_sort(x):
+      for i in range(len(x)):
+          
+          swap = i + np.argmin(x[i:])
+          (x[i], x[swap]) = (x[swap], x[i])
+      return x
+
+  x = np.array([2, 1, 4, 3, 5])
+  #selection_sort(x)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :exports both  :results output
+for i in range(len(x)):
+    print(i)
+    
+#+END_SRC
+
+#+RESULTS:
+: 0
+: 1
+: 2
+: 3
+: 4

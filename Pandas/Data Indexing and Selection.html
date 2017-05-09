@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-05-09 Tue 11:34 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Data Indexing and Selection</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="stonejiajia" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Data Indexing and Selection</h1>
+
+
+
+<div id="outline-container-org092c93e" class="outline-2">
+<h2 id="org092c93e">Data Selection in Series</h2>
+<div class="outline-text-2" id="text-org092c93e">
+<div class="org-src-container">
+<pre class="src src-ipython"><span style="color: #00796b;">import</span> matplotlib.pyplot <span style="color: #00796b;">as</span> plt
+%matplotlib inline
+<span style="color: #00796b;">import</span> pandas <span style="color: #00796b;">as</span> pd
+<span style="color: #00796b;">import</span> numpy <span style="color: #00796b;">as</span> np
+<span style="color: #00796b;">import</span> seaborn <span style="color: #00796b;">as</span> sns
+
+<span style="color: #EF6C00;">data</span> = pd.Series<span style="color: #e91e63;">(</span><span style="color: #1565C0;">[</span><span style="color: #689f38;">0</span>.<span style="color: #689f38;">25</span>, <span style="color: #689f38;">0</span>.<span style="color: #689f38;">5</span>, <span style="color: #689f38;">0</span>.<span style="color: #689f38;">75</span>, <span style="color: #689f38;">1</span>.<span style="color: #689f38;">0</span><span style="color: #1565C0;">]</span>,
+                 index=<span style="color: #1565C0;">[</span><span style="color: #689f38;">'a'</span>, <span style="color: #689f38;">'b'</span>, <span style="color: #689f38;">'c'</span>, <span style="color: #689f38;">'d'</span><span style="color: #1565C0;">]</span><span style="color: #e91e63;">)</span>
+data
+</pre>
+</div>
+
+<pre class="example">
+a    0.25
+b    0.50
+c    0.75
+d    1.00
+dtype: float64
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data<span style="color: #e91e63;">[</span><span style="color: #689f38;">'b'</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+0.5
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span style="color: #673ab7;">'a'</span> <span style="color: #00796b;">in</span> data
+</pre>
+</div>
+
+<pre class="example">
+True
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.keys<span style="color: #e91e63;">()</span>
+</pre>
+</div>
+
+<pre class="example">
+Index(['a', 'b', 'c', 'd'], dtype='object')
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span style="color: #B71C1C;">list</span><span style="color: #e91e63;">(</span>data.items<span style="color: #1565C0;">()</span><span style="color: #e91e63;">)</span>
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">a</td>
+<td class="org-right">0.25</td>
+</tr>
+
+<tr>
+<td class="org-left">b</td>
+<td class="org-right">0.5</td>
+</tr>
+
+<tr>
+<td class="org-left">c</td>
+<td class="org-right">0.75</td>
+</tr>
+
+<tr>
+<td class="org-left">d</td>
+<td class="org-right">1.0</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span style="color: #EF6C00;">data</span><span style="color: #e91e63;">[</span><span style="color: #689f38;">'e'</span><span style="color: #e91e63;">]</span> = <span style="color: #689f38;">1</span>.<span style="color: #689f38;">25</span>
+
+data
+</pre>
+</div>
+
+<pre class="example">
+a    0.25
+b    0.50
+c    0.75
+d    1.00
+e    1.25
+dtype: float64
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orged395a8" class="outline-2">
+<h2 id="orged395a8">Series as one-dimensional array</h2>
+<div class="outline-text-2" id="text-orged395a8">
+<div class="org-src-container">
+<pre class="src src-ipython">data<span style="color: #e91e63;">[</span><span style="color: #689f38;">'a'</span>:<span style="color: #689f38;">'c'</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+a    0.25
+b    0.50
+c    0.75
+dtype: float64
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data<span style="color: #e91e63;">[</span><span style="color: #689f38;">0</span>:<span style="color: #689f38;">2</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+a    0.25
+b    0.50
+dtype: float64
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data<span style="color: #e91e63;">[</span><span style="color: #1565C0;">(</span>data &gt; <span style="color: #689f38;">0</span>.<span style="color: #689f38;">3</span><span style="color: #1565C0;">)</span> &amp; <span style="color: #1565C0;">(</span>data &lt; <span style="color: #689f38;">0</span>.<span style="color: #689f38;">8</span><span style="color: #1565C0;">)</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+b    0.50
+c    0.75
+dtype: float64
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5d17999" class="outline-2">
+<h2 id="org5d17999">Lindexers:loc, iloc, and ix</h2>
+<div class="outline-text-2" id="text-org5d17999">
+<div class="org-src-container">
+<pre class="src src-ipython"><span style="color: #EF6C00;">data</span> = pd.Series<span style="color: #e91e63;">(</span><span style="color: #1565C0;">[</span><span style="color: #689f38;">'a'</span>, <span style="color: #689f38;">'b'</span>, <span style="color: #689f38;">'c'</span><span style="color: #1565C0;">]</span>, index=<span style="color: #1565C0;">[</span><span style="color: #689f38;">1</span>, <span style="color: #689f38;">3</span>, <span style="color: #689f38;">5</span><span style="color: #1565C0;">]</span><span style="color: #e91e63;">)</span>
+data
+</pre>
+</div>
+
+<pre class="example">
+1    a
+3    b
+5    c
+dtype: object
+</pre>
+</div>
+
+
+<div id="outline-container-org5462ff8" class="outline-3">
+<h3 id="org5462ff8">loc</h3>
+<div class="outline-text-3" id="text-org5462ff8">
+<div class="org-src-container">
+<pre class="src src-ipython">data.loc<span style="color: #e91e63;">[</span><span style="color: #689f38;">1</span>:<span style="color: #689f38;">2</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+1    a
+dtype: object
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.loc<span style="color: #e91e63;">[</span><span style="color: #689f38;">1</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+a
+</pre>
+</div>
+</div>
+<div id="outline-container-org8ca6647" class="outline-3">
+<h3 id="org8ca6647">iloc</h3>
+<div class="outline-text-3" id="text-org8ca6647">
+<div class="org-src-container">
+<pre class="src src-ipython">data.iloc<span style="color: #e91e63;">[</span><span style="color: #689f38;">0</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+a
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf4211c3" class="outline-2">
+<h2 id="orgf4211c3">Data Selection in DataFrame</h2>
+<div class="outline-text-2" id="text-orgf4211c3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span style="color: #EF6C00;">area</span> = pd.Series<span style="color: #e91e63;">(</span><span style="color: #1565C0;">{</span><span style="color: #689f38;">'California'</span>: <span style="color: #689f38;">423967</span>, <span style="color: #689f38;">'Texas'</span>: <span style="color: #689f38;">695662</span>,
+                  <span style="color: #689f38;">'New York'</span>: <span style="color: #689f38;">141297</span>, <span style="color: #689f38;">'Florida'</span>: <span style="color: #689f38;">170312</span>,
+                  <span style="color: #689f38;">'Illinois'</span>: <span style="color: #689f38;">149995</span><span style="color: #1565C0;">}</span><span style="color: #e91e63;">)</span>
+<span style="color: #EF6C00;">pop</span> = pd.Series<span style="color: #e91e63;">(</span><span style="color: #1565C0;">{</span><span style="color: #689f38;">'California'</span>: <span style="color: #689f38;">38332521</span>, <span style="color: #689f38;">'Texas'</span>: <span style="color: #689f38;">26448193</span>,
+                 <span style="color: #689f38;">'New York'</span>: <span style="color: #689f38;">19651127</span>, <span style="color: #689f38;">'Florida'</span>: <span style="color: #689f38;">19552860</span>,
+                 <span style="color: #689f38;">'Illinois'</span>: <span style="color: #689f38;">12882135</span><span style="color: #1565C0;">}</span><span style="color: #e91e63;">)</span>
+<span style="color: #EF6C00;">data</span> = pd.DataFrame<span style="color: #e91e63;">(</span><span style="color: #1565C0;">{</span><span style="color: #689f38;">'area'</span>:area, <span style="color: #689f38;">'pop'</span>:pop<span style="color: #1565C0;">}</span><span style="color: #e91e63;">)</span>
+
+<span style="color: #00796b;">print</span><span style="color: #e91e63;">(</span>tabulate<span style="color: #1565C0;">(</span>data, headers=<span style="color: #689f38;">"keys"</span>, tablefmt=<span style="color: #689f38;">"orgtbl"</span><span style="color: #1565C0;">)</span><span style="color: #e91e63;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+|            |   area |         pop |
+|------------+--------+-------------|
+| California | 423967 | 3.83325e+07 |
+| Florida    | 170312 | 1.95529e+07 |
+| Illinois   | 149995 | 1.28821e+07 |
+| New York   | 141297 | 1.96511e+07 |
+| Texas      | 695662 | 2.64482e+07 |
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data<span style="color: #e91e63;">[</span><span style="color: #689f38;">'area'</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+California    423967
+Florida       170312
+Illinois      149995
+New York      141297
+Texas         695662
+Name: area, dtype: int64
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.area
+</pre>
+</div>
+
+<pre class="example">
+California    423967
+Florida       170312
+Illinois      149995
+New York      141297
+Texas         695662
+Name: area, dtype: int64
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.area <span style="color: #00796b;">is</span> data<span style="color: #e91e63;">[</span><span style="color: #689f38;">'area'</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+True
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.pop
+</pre>
+</div>
+
+<pre class="example">
+&lt;bound method NDFrame.pop of               area       pop
+California  423967  38332521
+Florida     170312  19552860
+Illinois    149995  12882135
+New York    141297  19651127
+Texas       695662  26448193&gt;
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data<span style="color: #e91e63;">[</span><span style="color: #689f38;">'pop'</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+California    38332521
+Florida       19552860
+Illinois      12882135
+New York      19651127
+Texas         26448193
+Name: pop, dtype: int64
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span style="color: #EF6C00;">data</span><span style="color: #e91e63;">[</span><span style="color: #689f38;">'density'</span><span style="color: #e91e63;">]</span> = data<span style="color: #e91e63;">[</span><span style="color: #689f38;">'pop'</span><span style="color: #e91e63;">]</span> / data<span style="color: #e91e63;">[</span><span style="color: #689f38;">'area'</span><span style="color: #e91e63;">]</span>
+
+<span style="color: #00796b;">print</span><span style="color: #e91e63;">(</span>tabulate<span style="color: #1565C0;">(</span>data, headers=<span style="color: #689f38;">"keys"</span>, tablefmt=<span style="color: #689f38;">"orgtbl"</span><span style="color: #1565C0;">)</span><span style="color: #e91e63;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+|            |   area |         pop |   density |
+|------------+--------+-------------+-----------|
+| California | 423967 | 3.83325e+07 |   90.4139 |
+| Florida    | 170312 | 1.95529e+07 |  114.806  |
+| Illinois   | 149995 | 1.28821e+07 |   85.8838 |
+| New York   | 141297 | 1.96511e+07 |  139.077  |
+| Texas      | 695662 | 2.64482e+07 |   38.0187 |
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgff1cf25" class="outline-2">
+<h2 id="orgff1cf25">DataFrame as two-dimensional array</h2>
+<div class="outline-text-2" id="text-orgff1cf25">
+<div class="org-src-container">
+<pre class="src src-ipython">data.values
+</pre>
+</div>
+
+<pre class="example">
+array([[  4.23967000e+05,   3.83325210e+07,   9.04139261e+01],
+       [  1.70312000e+05,   1.95528600e+07,   1.14806121e+02],
+       [  1.49995000e+05,   1.28821350e+07,   8.58837628e+01],
+       [  1.41297000e+05,   1.96511270e+07,   1.39076746e+02],
+       [  6.95662000e+05,   2.64481930e+07,   3.80187404e+01]])
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.T
+</pre>
+</div>
+
+<pre class="example">
+           California       Florida      Illinois      New York         Texas
+area     4.239670e+05  1.703120e+05  1.499950e+05  1.412970e+05  6.956620e+05
+pop      3.833252e+07  1.955286e+07  1.288214e+07  1.965113e+07  2.644819e+07
+density  9.041393e+01  1.148061e+02  8.588376e+01  1.390767e+02  3.801874e+01
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.values<span style="color: #e91e63;">[</span><span style="color: #689f38;">0</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+array([  4.23967000e+05,   3.83325210e+07,   9.04139261e+01])
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.T<span style="color: #e91e63;">[</span><span style="color: #689f38;">'California'</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+area       4.239670e+05
+pop        3.833252e+07
+density    9.041393e+01
+Name: California, dtype: float64
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.iloc<span style="color: #e91e63;">[</span>:<span style="color: #689f38;">3</span>, :<span style="color: #689f38;">2</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+              area       pop
+California  423967  38332521
+Florida     170312  19552860
+Illinois    149995  12882135
+</pre>
+
+<p>
+三行两列
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.loc<span style="color: #e91e63;">[</span>:<span style="color: #689f38;">'Illinois'</span>, :<span style="color: #689f38;">'pop'</span><span style="color: #e91e63;">]</span>
+</pre>
+</div>
+
+<pre class="example">
+              area       pop
+California  423967  38332521
+Florida     170312  19552860
+Illinois    149995  12882135
+</pre>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: stonejiajia</p>
+<p class="date">Created: 2017-05-09 Tue 11:34</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

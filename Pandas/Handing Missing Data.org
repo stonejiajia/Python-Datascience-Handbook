@@ -7,6 +7,9 @@
   import pandas as pd
   import numpy as np
   import seaborn as sns
+  from tabulate import tabulate
+
+
 
   vals1 = np.array([1, None, 3, 4])
   vals1
@@ -24,10 +27,10 @@
 
 #+RESULTS:
 : dtype = object
-: 10 loops, best of 3: 80.4 ms per loop
+: 10 loops, best of 3: 92.2 ms per loop
 : 
 : dtype = int
-: 100 loops, best of 3: 2.93 ms per loop
+: 100 loops, best of 3: 3.99 ms per loop
 : 
 
 * NaN: Missing numerical data

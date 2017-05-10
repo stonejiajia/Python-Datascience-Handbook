@@ -1,0 +1,146 @@
+#+TITle:Combining Datasets: Merge and Join
+
+
+* Categories of Joins
+
+#+BEGIN_SRC ipython :session :results output raw :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+  from tabulate import tabulate
+
+  df1 = pd.DataFrame({'employee': ['Bob', 'Jake', 'Lisa', 'Sue'],
+                      'group': ['Accounting', 'Engineering', 'Engineering', 'HR']})
+  df2 = pd.DataFrame({'employee': ['Lisa', 'Bob', 'Jake', 'Sue'],
+                      'hire_date': [2004, 2008, 2012, 2014]})
+
+  
+  print(tabulate(df1, headers="keys", tablefmt="orgtbl") + "\n")
+  
+  print(tabulate(df2, headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+|   | employee | group       |
+|---+----------+-------------|
+| 0 | Bob      | Accounting  |
+| 1 | Jake     | Engineering |
+| 2 | Lisa     | Engineering |
+| 3 | Sue      | HR          |
+
+|    | employee   |   hire_date |
+|----+------------+-------------|
+|  0 | Lisa       |        2004 |
+|  1 | Bob        |        2008 |
+|  2 | Jake       |        2012 |
+|  3 | Sue        |        2014 |
+
+
+#+BEGIN_SRC ipython :session :results output raw :exports both  
+df3 = pd.merge(df1, df2)
+
+print(tabulate(df3, headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+|   | employee | group       | hire_date |
+|---+----------+-------------+-----------|
+| 0 | Bob      | Accounting  |      2008 |
+| 1 | Jake     | Engineering |      2012 |
+| 2 | Lisa     | Engineering |      2004 |
+| 3 | Sue      | HR          |      2014 |
+
+** Many-to-one joins
+
+#+BEGIN_SRC ipython :session :results output raw :exports both  
+df4 = pd.DataFrame({'group': ['Accounting', 'Engineering', 'HR'],
+                    'supervisor': ['Carly', 'Guido', 'Steve']})
+
+print(tabulate(pd.merge(df3, df4), headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+|   | employee | group       | hire_date | supervisor |
+|---+----------+-------------+-----------+------------|
+| 0 | Bob      | Accounting  |      2008 | Carly      |
+| 1 | Jake     | Engineering |      2012 | Guido      |
+| 2 | Lisa     | Engineering |      2004 | Guido      |
+| 3 | Sue      | HR          |      2014 | Steve      |
+
+
+
+** Many-to-many joins
+
+#+BEGIN_SRC ipython :session :results output raw :exports both  
+df5 = pd.DataFrame({'group': ['Accounting', 'Accounting',
+                              'Engineering', 'Engineering', 'HR', 'HR'],
+                    'skills': ['math', 'spreadsheets', 'coding', 'linux',
+                               'spreadsheets', 'organization']})
+
+
+print(tabulate(df, headers="keys", tablefmt="orgtbl") + "\n")
+
+print(tabulate(pd.merge(df1, df5), headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+|   | Q | R | S | T |
+|---+---+---+---+---|
+| 0 | 4 | 8 | 6 | 1 |
+| 1 | 3 | 8 | 1 | 9 |
+| 2 | 8 | 9 | 4 | 1 |
+
+|    | employee   | group       | skills       |
+|----+------------+-------------+--------------|
+|  0 | Bob        | Accounting  | math         |
+|  1 | Bob        | Accounting  | spreadsheets |
+|  2 | Jake       | Engineering | coding       |
+|  3 | Jake       | Engineering | linux        |
+|  4 | Lisa       | Engineering | coding       |
+|  5 | Lisa       | Engineering | linux        |
+|  6 | Sue        | HR          | spreadsheets |
+|  7 | Sue        | HR          | organization |
+
+* Specification of the Merge Key
+
+** The on keyword
+
+#+BEGIN_SRC ipython :session :results output raw :exports both  
+
+
+print(tabulate(df1, headers="keys", tablefmt="orgtbl") + "\n")
+
+
+print(tabulate(df2, headers="keys", tablefmt="orgtbl"))
+
+print(tabulate(pd.merge(df1, df2, on='employee'), headers="keys", tablefmt="orgtbl"))
+#+END_SRC
+
+#+RESULTS:
+|   | employee | group       |
+|---+----------+-------------|
+| 0 | Bob      | Accounting  |
+| 1 | Jake     | Engineering |
+| 2 | Lisa     | Engineering |
+| 3 | Sue      | HR          |
+
+|    | employee   |   hire_date |
+|----+------------+-------------|
+|  0 | Lisa       |        2004 |
+|  1 | Bob        |        2008 |
+|  2 | Jake       |        2012 |
+|  3 | Sue        |        2014 |
+
+
+|    | employee   | group       |   hire_date |
+|----+------------+-------------+-------------|
+|  0 | Bob        | Accounting  |        2008 |
+|  1 | Jake       | Engineering |        2012 |
+|  2 | Lisa       | Engineering |        2004 |
+|  3 | Sue        | HR          |        2014 |
+
+** The left_on and right_on keywords
+
+

@@ -9,6 +9,10 @@
   import pandas as pd
   import numpy as np
   import seaborn as sns
+  from tabulate import tabulate
+
+
+
 
   index = [('California', 2000), ('California', 2010),
            ('New York', 2000), ('New York', 2010),

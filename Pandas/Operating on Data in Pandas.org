@@ -183,9 +183,9 @@ A.pow(B, fill_value=fill)
 #+END_SRC
 
 #+RESULTS:
-: array([[4, 4, 0, 0],
-:        [2, 9, 3, 4],
-:        [1, 7, 1, 8]])
+: array([[6, 0, 0, 8],
+:        [8, 3, 8, 2],
+:        [6, 5, 7, 8]])
 
 #+BEGIN_SRC ipython :session :exports both  
   A - A[0]
@@ -196,36 +196,42 @@ A.pow(B, fill_value=fill)
 :        [-2,  5,  3,  4],
 :        [-3,  3,  1,  8]])
 
-#+BEGIN_SRC ipython :session :exports both  
+#+BEGIN_SRC ipython :session :results output :exports both  
   df = pd.DataFrame(A, columns=list('QRST'))
-  df
+  
+  print(tabulate(df, headers="keys", tablefmt="orgtbl"))
 #+END_SRC
 
 #+RESULTS:
-:    Q  R  S  T
-: 0  4  4  0  0
-: 1  2  9  3  4
-: 2  1  7  1  8
+: |    |   Q |   R |   S |   T |
+: |----+-----+-----+-----+-----|
+: |  0 |   6 |   0 |   0 |   8 |
+: |  1 |   8 |   3 |   8 |   2 |
+: |  2 |   6 |   5 |   7 |   8 |
 
-#+BEGIN_SRC ipython :session :exports both  
-df - df.iloc[0]
+#+BEGIN_SRC ipython :session :results output :exports both  
+
+print(tabulate(df - df.iloc[0], headers="keys", tablefmt="orgtbl"))
 #+END_SRC
 
 #+RESULTS:
-:    Q  R  S  T
-: 0  0  0  0  0
-: 1 -2  5  3  4
-: 2 -3  3  1  8
+: |    |   Q |   R |   S |   T |
+: |----+-----+-----+-----+-----|
+: |  0 |   0 |   0 |   0 |   0 |
+: |  1 |   2 |   3 |   8 |  -6 |
+: |  2 |   0 |   5 |   7 |   0 |
 
-#+BEGIN_SRC ipython :session :exports both  
-  df.subtract(df['R'], axis=0)
+#+BEGIN_SRC ipython :session :results output :exports both  
+
+print(tabulate(df.subtract(df['R'], axis=0), headers="keys", tablefmt="orgtbl"))
 #+END_SRC
 
 #+RESULTS:
-:    Q  R  S  T
-: 0  0  0 -4 -4
-: 1 -7  0 -6 -5
-: 2 -6  0 -6  1
+ |    |   Q |   R |   S |   T |
+ |----+-----+-----+-----+-----|
+ |  0 |   6 |   0 |   0 |   8 |
+ |  1 |   5 |   0 |   5 |  -1 |
+ |  2 |   1 |   0 |   2 |   3 |
 
 #+BEGIN_SRC ipython :session :exports both  
   halfrow = df.iloc[0, ::2]

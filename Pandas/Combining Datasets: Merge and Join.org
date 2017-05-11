@@ -430,13 +430,13 @@ print(tabulate(merged[merged['population'].isnull()].head(), headers="keys", tab
 #+END_SRC
 
 #+RESULTS:
-|      | state/region | ages    | year | population | state |
-|------+--------------+---------+------+------------+-------|
-| 2448 | PR           | under18 | 1990 |        nan |   nan |
-| 2449 | PR           | total   | 1990 |        nan |   nan |
-| 2450 | PR           | total   | 1991 |        nan |   nan |
-| 2451 | PR           | under18 | 1991 |        nan |   nan |
-| 2452 | PR           | total   | 1993 |        nan |   nan |
+|      | state/region | ages    | year | population | state       |
+|------+--------------+---------+------+------------+-------------|
+| 2448 | PR           | under18 | 1990 |        nan | Puerto Rico |
+| 2449 | PR           | total   | 1990 |        nan | Puerto Rico |
+| 2450 | PR           | total   | 1991 |        nan | Puerto Rico |
+| 2451 | PR           | under18 | 1991 |        nan | Puerto Rico |
+| 2452 | PR           | total   | 1993 |        nan | Puerto Rico |
 
 #+BEGIN_SRC ipython :session :exports both  
 merged.loc[merged['state'].isnull(), 'state/region'].unique()

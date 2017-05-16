@@ -55,7 +55,17 @@ np.arange(0, 20, 2)
 np.linspace : 步数
 np.arange : 开始，结束，之间间隔
 
-#+BEGIN_SRC ipython :session :exports both  
+#+BEGIN_SRC ipython :session: [[2 3 4]
+:  [4 5 6]
+:  [6 7 8]]
+ [4 5 6]
+ [6 7 8]]
+ [4 5 6]
+ [6 7 8]]
+ [4 5 6]
+ [6 7 8]]
+
+ :exports both  
 np.eye(3)
 #+END_SRC
 
@@ -179,3 +189,47 @@ print(upper, lower)
 :  [ 8  9 10 11]
 :  [12 13 14 15]]
 
+
+#+BEGIN_SRC ipython :session :results output  :exports both  
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import pandas as pd
+  import numpy as np
+  import seaborn as sns
+  from tabulate import tabulate
+
+
+  a = np.array([range(i, i + 3) for i in [2, 4, 6]])
+  print a.shape
+#+END_SRC
+
+#+RESULTS:
+: (3, 3)
+
+#+BEGIN_SRC ipython :session :exports both  
+np.zeros(10, dtype=float)
+#+END_SRC
+
+#+RESULTS:
+: array([ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+
+#+BEGIN_SRC ipython :session :exports both  
+np.random.randint(0, 10, (3, 3))
+#+END_SRC
+
+#+RESULTS:
+: array([[9, 9, 9],
+:        [0, 1, 1],
+:        [2, 5, 6]])
+
+
+#+BEGIN_SRC ipython :session :exports both  
+  import numpy as np
+  np.random.seed(0)
+
+  x1 = np.random.randint(10, size=(3, 4))
+  x1.ndim
+#+END_SRC
+
+#+RESULTS:
+: 2

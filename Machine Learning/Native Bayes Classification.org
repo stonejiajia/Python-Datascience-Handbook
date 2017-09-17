@@ -1,0 +1,90 @@
+#+TITLE:Gaussian Naive Bayes (GaussianNB)
+
+* Gaussian Naive Bayes
+
+#+BEGIN_SRC ipython :session :exports both :results raw drawer 
+%matplotlib inline
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns; sns.set()
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+:END:
+
+#+BEGIN_SRC ipython :session :exports both :results raw drawer 
+from sklearn.datasets import make_blobs
+X, y = make_blobs(100, 2, centers=2, random_state=2, cluster_std=1.5)
+plt.scatter(X[:, 0], X[:, 1], c=y, s=50, cmap='RdBu')
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+<matplotlib.collections.PathCollection at 0x1172ddc90>
+[[./obipy-resources/10416Eao.png]]
+:END:
+
+#+BEGIN_SRC ipython :session :exports both :results raw drawer 
+from sklearn.naive_bayes import GaussianNB
+model = GaussianNB()
+model.fit(X, y)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+GaussianNB(priors=None)
+:END:
+
+#+BEGIN_SRC ipython :session :exports both :results raw drawer 
+rng = np.random.RandomState(0)
+Xnew = [-6, -14] + [14, 18] * rng.rand(2000, 2)
+ynew = model.predict(Xnew)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+:END:
+
+#+BEGIN_SRC ipython :session :exports both :results raw drawer 
+plt.scatter(X[:, 0], X[:, 1], c=y, s=50, cmap='RdBu')
+lim = plt.axis()
+plt.scatter(Xnew[:, 0], Xnew[:, 1], c=ynew, s=20, cmap='RdBu', alpha=0.1)
+plt.axis(lim)
+
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+(-5.8992664866054731,
+ 7.7862788381523007,
+ -13.788951516177548,
+ 3.3764615206977902)
+[[./obipy-resources/10416UDU.png]]
+:END:
+
+
+
+
+
+#+BEGIN_SRC ipython :session :exports both :results raw drawer 
+yprob = model.predict_proba(Xnew)
+yprob[-8:].round(2)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+array([[ 0.89,  0.11],
+       [ 1.  ,  0.  ],
+       [ 1.  ,  0.  ],
+       [ 1.  ,  0.  ],
+       [ 1.  ,  0.  ],
+       [ 1.  ,  0.  ],
+       [ 0.  ,  1.  ],
+       [ 0.15,  0.85]])
+:END:
+
+
+#+BEGIN_SRC ipython :session :exports both :results raw drawer 
+
+#+END_SRC

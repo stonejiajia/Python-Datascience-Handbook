@@ -1,0 +1,37 @@
+#+TITLE:
+* how to plot
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_1.png
+import matplotlib.pyplot as plt
+import numpy as np
+%matplotlib inline
+
+x = np.linspace(0, 10, 100)
+
+plt.plot(x, np.sin(x))
+plt.plot(x, np.cos(x))
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_1.png]]
+
+
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_2.png
+import matplotlib.pyplot as plt
+import numpy as np
+%matplotlib inline
+
+x = np.linspace(0, 10, 100)
+fig = plt.figure()
+plt.plot(x, np.sin(x), '-')
+plt.plot(x, np.cos(x), '--')
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_2.png]]
+
+
+#+BEGIN_SRC ipython :session :results output
+
+#+END_SRC

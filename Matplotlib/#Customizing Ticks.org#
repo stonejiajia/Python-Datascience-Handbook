@@ -1,0 +1,170 @@
+
+
+
+
+#+NAME: high-bacon-utah-double
+#+BEGIN_SRC ipython
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-whitegrid')
+import numpy as np
+
+ax = plt.axes(xscale='log', yscale='log')
+#+END_SRC
+
+#+RESULTS: high-bacon-utah-double
+:RESULTS:
+[[file:ipython-inline-images/ob-ipython-e27e9a09a042543a5a7961e05f6a448e.png]]
+<matplotlib.figure.Figure at 0x106037a90>
+:END:
+
+
+#+NAME: romeo-florida-yankee-fourteen
+#+BEGIN_SRC ipython
+ax = plt.axes()
+ax.plot(np.random.rand(50))
+
+ax.yaxis.set_major_locator(plt.NullLocator())
+ax.xaxis.set_major_formatter(plt.NullFormatter())
+#+END_SRC
+
+#+RESULTS: romeo-florida-yankee-fourteen
+:RESULTS:
+[[file:ipython-inline-images/ob-ipython-d2e1ecea6a343a0293c3159ecf0c6bf3.png]]
+<matplotlib.figure.Figure at 0x10c162110>
+:END:
+
+
+#+NAME: vegan-five-johnny-fish
+#+BEGIN_SRC ipython
+fig, ax = plt.subplots(5, 5, figsize=(5, 5))
+fig.subplots_adjust(hspace=0, wspace=0)
+
+from sklearn.datasets import fetch_olivetti_faces
+faces = fetch_olivetti_faces
+
+for i in range(5):
+    for j in range(5):
+        ax[i, j].xaxis.set_major_locator(plt.NullLocator())
+        ax[i, j].yaxis.set_major_locator(plt.NullFormatter())
+        ax[i, j].imshow(faces[10 * i + j], cmap="bone")
+#+END_SRC
+
+#+RESULTS: vegan-five-johnny-fish
+:RESULTS:
+
+TypeErrorTraceback (most recent call last)
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/IPython/core/formatters.pyc in __call__(self, obj)
+    305                 pass
+    306             else:
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 307)][--> 307                 return printer(obj)]]
+    308             # Finally look for special method names
+    309             method = get_real_method(obj, self.print_method)
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/IPython/core/pylabtools.pyc in <lambda>(fig)
+    238 
+    239     if 'png' in formats:
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 240)][--> 240         png_formatter.for_type(Figure, lambda fig: print_figure(fig, 'png', **kwargs))]]
+    241     if 'retina' in formats or 'png2x' in formats:
+    242         png_formatter.for_type(Figure, lambda fig: retina_figure(fig, **kwargs))
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/IPython/core/pylabtools.pyc in print_figure(fig, fmt, bbox_inches, **kwargs)
+    122 
+    123     bytes_io = BytesIO()
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 124)][--> 124     fig.canvas.print_figure(bytes_io, **kw)]]
+    125     data = bytes_io.getvalue()
+    126     if fmt == 'svg':
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/backend_bases.pyc in print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, **kwargs)
+   2190                     orientation=orientation,
+   2191                     dryrun=True,
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 2192)][-> 2192                     **kwargs)]]
+   2193                 renderer = self.figure._cachedRenderer
+   2194                 bbox_inches = self.figure.get_tightbbox(renderer)
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/backends/backend_agg.pyc in print_png(self, filename_or_obj, *args, **kwargs)
+    543 
+    544     def print_png(self, filename_or_obj, *args, **kwargs):
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 545)][--> 545         FigureCanvasAgg.draw(self)]]
+    546         renderer = self.get_renderer()
+    547         original_dpi = renderer.dpi
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/backends/backend_agg.pyc in draw(self)
+    462 
+    463         try:
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 464)][--> 464             self.figure.draw(self.renderer)]]
+    465         finally:
+    466             RendererAgg.lock.release()
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/artist.pyc in draw_wrapper(artist, renderer, *args, **kwargs)
+     61     def draw_wrapper(artist, renderer, *args, **kwargs):
+     62         before(artist, renderer)
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 63)][---> 63         draw(artist, renderer, *args, **kwargs)]]
+     64         after(artist, renderer)
+     65 
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/figure.pyc in draw(self, renderer)
+   1141 
+   1142             mimage._draw_list_compositing_images(
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 1143)][-> 1143                 renderer, self, dsu, self.suppressComposite)]]
+   1144 
+   1145             renderer.close_group('figure')
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/image.pyc in _draw_list_compositing_images(renderer, parent, dsu, suppress_composite)
+    137     if not_composite or not has_images:
+    138         for zorder, a in dsu:
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 139)][--> 139             a.draw(renderer)]]
+    140     else:
+    141         # Composite any adjacent images together
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/artist.pyc in draw_wrapper(artist, renderer, *args, **kwargs)
+     61     def draw_wrapper(artist, renderer, *args, **kwargs):
+     62         before(artist, renderer)
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 63)][---> 63         draw(artist, renderer, *args, **kwargs)]]
+     64         after(artist, renderer)
+     65 
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/axes/_base.pyc in draw(self, renderer, inframe)
+   2407             renderer.stop_rasterizing()
+   2408 
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 2409)][-> 2409         mimage._draw_list_compositing_images(renderer, self, dsu)]]
+   2410 
+   2411         renderer.close_group('axes')
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/image.pyc in _draw_list_compositing_images(renderer, parent, dsu, suppress_composite)
+    137     if not_composite or not has_images:
+    138         for zorder, a in dsu:
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 139)][--> 139             a.draw(renderer)]]
+    140     else:
+    141         # Composite any adjacent images together
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/artist.pyc in draw_wrapper(artist, renderer, *args, **kwargs)
+     61     def draw_wrapper(artist, renderer, *args, **kwargs):
+     62         before(artist, renderer)
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 63)][---> 63         draw(artist, renderer, *args, **kwargs)]]
+     64         after(artist, renderer)
+     65 
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/axis.pyc in draw(self, renderer, *args, **kwargs)
+   1134         renderer.open_group(__name__)
+   1135 
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 1136)][-> 1136         ticks_to_draw = self._update_ticks(renderer)]]
+   1137         ticklabelBoxes, ticklabelBoxes2 = self._get_tick_bboxes(ticks_to_draw,
+   1138                                                                 renderer)
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/axis.pyc in _update_ticks(self, renderer)
+    967 
+    968         interval = self.get_view_interval()
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 969)][--> 969         tick_tups = [t for t in self.iter_ticks()]]]
+    970         if self._smart_bounds:
+    971             # handle inverted limits
+
+/Users/stone20091652/.pyenv/versions/anaconda2-4.3.1/lib/python2.7/site-packages/matplotlib/axis.pyc in iter_ticks(self)
+    910         Iterate through all of the major and minor ticks.
+    911         """
+[[elisp:(ob-ipython-jump "Customizing Ticks.org" "vegan-five-johnny-fish" 912)][--> 912         majorLocs = self.major.locator()]]
+    913         majorTicks = self.get_major_ticks(len(majorLocs))
+    914         self.major.formatter.set_locs(majorLocs)
+
+TypeError: __call__() takes at least 2 arguments (1 given)
+:END:

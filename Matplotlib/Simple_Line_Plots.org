@@ -1,0 +1,34 @@
+
+#+TITLE:
+* Simple line plots
+
+#+BEGIN_SRC ipython :session :results output
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-whitegrid')
+import numpy as np
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_s.png
+fig = plt.figure()
+ax = plt.axes()
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_s.png]]
+
+
+#+BEGIN_SRC ipython :session :exports both :file ./figure/fig_d.png
+fig = plt.figure()
+ax = plt.axes()
+
+x = np.linspace(0, 10 , 100)
+ax.plot(x, np.sin(x))
+#+END_SRC
+
+#+RESULTS:
+[[file:./figure/fig_d.png]]
+
+

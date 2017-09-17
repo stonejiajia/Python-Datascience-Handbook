@@ -1,0 +1,37 @@
+
+
+
+
+#+NAME: high-bacon-utah-double
+#+BEGIN_SRC ipython
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-whitegrid')
+import numpy as np
+
+ax = plt.axes(xscale='log', yscale='log')
+#+END_SRC
+
+#+RESULTS: high-bacon-utah-double
+:RESULTS:
+[[file:ipython-inline-images/ob-ipython-e27e9a09a042543a5a7961e05f6a448e.png]]
+<matplotlib.figure.Figure at 0x10cdee050>
+:END:
+
+
+#+NAME: romeo-florida-yankee-fourteen
+#+BEGIN_SRC ipython
+ax = plt.axes()
+ax.plot(np.random.rand(50))
+
+ax.yaxis.set_major_locator(plt.NullLocator())
+ax.xaxis.set_major_formatter(plt.NullFormatter())
+#+END_SRC
+
+#+RESULTS: romeo-florida-yankee-fourteen
+:RESULTS:
+[[file:ipython-inline-images/ob-ipython-3e5c982f59f1fd2f3f2c172993a1edb4.png]]
+<matplotlib.figure.Figure at 0x10f98ae50>
+:END:
+
+
